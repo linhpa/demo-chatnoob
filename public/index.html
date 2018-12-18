@@ -1,0 +1,79 @@
+<h1>
+	Welcome, Thank you for using BSH Service
+</h1>
+<h2 id="sending">
+	Sending position...
+</h2>
+<h2 id="noti" hidden="true">
+	Send position successfully
+</h2>
+<h2 id="failnoti" hidden="true">
+	Send position failed
+</h2>
+<!-- <script src="/js/vendor/jquery.min.js"></script> -->
+<script>
+var apiGeolocationSuccess = function(position) {
+    //alert("API geolocation success!\n\nlat = " + position.coords.latitude + "\nlng = " + position.coords.longitude);
+    //console.log(position)
+    console.log(position)
+};
+
+var tryAPIGeolocation = function() {
+    jQuery.post( "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDViaUZiCsi7LfCkwkdpLRT4AmWzWP9CnM", function(success) {
+        apiGeolocationSuccess({coords: {latitude: success.location.lat, longitude: success.location.lng}});
+  })
+  .fail(function(err) {
+    console.log("API Geolocation error! \n\n"+err);
+  });
+};
+
+var browserGeolocationSuccess = function(position) {
+    //alert("Browser geolocation success!\n\nlat = " + position.coords.latitude + "\nlng = " + position.coords.longitude);
+    apiGeolocationSuccess(position);
+};
+
+var browserGeolocationFail = function(error) {
+  let msg = ''
+  switch (error.code) {
+    case error.TIMEOUT:
+      msg = "Browser geolocation error !\n\nTimeout.";
+      break;
+    case error.PERMISSION_DENIED:      
+      if(error.message.indexOf("Only secure origins are allowed") == 0) {
+        tryAPIGeolocation();
+      }
+      break;
+    case error.POSITION_UNAVAILABLE:
+      msg = "Browser geolocation error !\n\nPosition unavailable.";
+      break;
+  }
+  console.log(msg)
+};
+
+var tryGeolocation = function() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+        browserGeolocationSuccess,
+      browserGeolocationFail,
+      {maximumAge: 50000, timeout: 20000, enableHighAccuracy: true});
+  }
+};
+
+tryGeolocation();
+
+/////////
+// function getLocation() {
+//   if (navigator.geolocation) {
+//     navigator.geolocation.getCurrentPosition(showPosition);
+//   } else {
+//     console.log('browser not supported')
+//   }
+// }
+
+// function showPosition(position) {
+//   console.log(position.coords.latitude)
+//   console.log(position.coords.longitude) 
+// }
+
+// getLocation();
+</script>

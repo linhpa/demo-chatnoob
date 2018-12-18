@@ -1,0 +1,14 @@
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[dn]
+C=VN
+ST=HCM
+L=Ho Chi Minh City
+O=SouthTelecom
+OU=Technical
+emailAddress=phanbin123@gmail.com
+CN = localhost
