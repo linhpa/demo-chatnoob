@@ -18,6 +18,7 @@ var certOptions = {
 }
 
 const server = require('https').createServer(certOptions, app)
+//const server = require('http').createServer(app)
 
 var io = require("socket.io")(server)
 
